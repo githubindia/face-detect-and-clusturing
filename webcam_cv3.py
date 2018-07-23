@@ -6,14 +6,14 @@ from time import sleep
 from PIL import Image
 import time, shutil, os
 
-def webcamCrop():
+def webcamCrop(filename):
     faceCascade = cv2.CascadeClassifier("classifier/haarcascade_frontalface_default.xml")
     eye_cascade = cv2.CascadeClassifier('classifier/haarcascade_eye.xml')
     mouth_cascade = cv2.CascadeClassifier('classifier/mouth.xml')
     nose_cascade = cv2.CascadeClassifier('classifier/nariz.xml')
     log.basicConfig(filename='webcam.log',level=log.INFO)
 
-    video_capture = cv2.VideoCapture('sample_video.mov')
+    video_capture = cv2.VideoCapture('/Users/artrial/desktop/face_detect/face_clustering/FaceImageClustering/video/' + filename)
     anterior = 0
 
     if os.path.exists("DataSet"):
@@ -30,7 +30,7 @@ def webcamCrop():
 
         # Capture frame-by-frame
         ret, frame = video_capture.read()
-        print(str(frame))
+        # print(str(frame))
         if frame is not None:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -40,7 +40,7 @@ def webcamCrop():
                 minNeighbors=5,
                 minSize=(30, 30)
             )
-
+            print(str(faces) + "faces printed")
             # Draw a rectangle around the faces
             for (x, y, w, h) in faces:
                 # cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
@@ -49,17 +49,13 @@ def webcamCrop():
                 # cv2.imwrite(FaceFileName, sub_face)
                 roi_gray = gray[y:y+h, x:x+w]
                 eyes = eye_cascade.detectMultiScale(roi_gray)
-                mouth = mouth_cascade.detectMultiScale(roi_gray)
-                nose = nose_cascade.detectMultiScale(roi_gray)
+                # mouth = mouth_cascade.detectMultiScale(roi_gray)
+                # nose = nose_cascade.detectMultiScale(roi_gray)
                 for (ex,ey,ew,eh) in eyes:
                     # cv2.rectangle(frame,(ex,ey),(ex+ew,ey+eh),(22,255,0),2)
-                    for (mx,my,mw,mh) in mouth:
-                        # cv2.rectangle(frame,(mx,my),(mx+mw,my+mh),(122,255,0),2)
-                        for (nx,ny,nw,nh) in nose:
-                            # cv2.rectangle(frame,(nx,ny),(nx+nw,ny+nh),(0,255,111),2)
-                            sub_face = frame[y:y+h, x:x+w]
-                            FaceFileName = "DataSet/face_" + str(y) + ".jpg"
-                            cv2.imwrite(FaceFileName, sub_face)
+                    sub_face = frame[y:y+h, x:x+w]
+                    FaceFileName = "DataSet/face_" + str(y) + ".jpg"
+                    cv2.imwrite(FaceFileName, sub_face)
 
             if anterior != len(faces):
                 anterior = len(faces)

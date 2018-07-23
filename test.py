@@ -1,4 +1,4 @@
-# frame = [] 
+# frame = []
 
 # if not frame:
 #     print("true")

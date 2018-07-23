@@ -2,5 +2,7 @@
 *.mov
 *.zip
 DataSet
-result
+results/*
 webcam.log
+d1
+new_cropped_images
